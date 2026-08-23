@@ -95,13 +95,25 @@ class ConstituencyProjectController extends Controller
             ->pluck('year')
             ->toArray();
 
+        $projectStatuses = ConstituencyProject::where('status', 'published')
+            ->whereNotNull('status_project')
+            ->distinct()
+            ->pluck('status_project')
+            ->filter()
+            ->values()
+            ->toArray();
+
+        if (empty($projectStatuses)) {
+            $projectStatuses = ['Annually', 'Awarded', 'Budgeted', 'Budgeted 2026', 'Completed', 'Distributed', 'Ongoing', 'Planned', 'Seasonal', 'Suspended', 'Cancelled'];
+        }
+
         return Inertia::render('ProjectsIndex', [
             'projects' => $projects,
             'states' => $states,
             'lgas' => $lgas,
             'categories' => $categories,
             'years' => !empty($years) ? $years : [date('Y')],
-            'projectStatuses' => ['Planned', 'Ongoing', 'Completed', 'Suspended', 'Cancelled'],
+            'projectStatuses' => $projectStatuses,
             'filters' => $request->only(['search', 'state', 'lga', 'category', 'status_project', 'year']),
         ]);
     }

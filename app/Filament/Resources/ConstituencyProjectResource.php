@@ -57,9 +57,15 @@ class ConstituencyProjectResource extends Resource
                                     ->preload(),
                                 Forms\Components\Select::make('status_project')
                                     ->options([
-                                        'Planned' => 'Planned',
-                                        'Ongoing' => 'Ongoing',
+                                        'Annually' => 'Annually',
+                                        'Awarded' => 'Awarded',
+                                        'Budgeted' => 'Budgeted',
+                                        'Budgeted 2026' => 'Budgeted 2026',
                                         'Completed' => 'Completed',
+                                        'Distributed' => 'Distributed',
+                                        'Ongoing' => 'Ongoing',
+                                        'Planned' => 'Planned',
+                                        'Seasonal' => 'Seasonal',
                                         'Suspended' => 'Suspended',
                                         'Cancelled' => 'Cancelled',
                                     ])
@@ -190,12 +196,14 @@ class ConstituencyProjectResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status_project')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'Planned' => 'gray',
-                        'Ongoing' => 'warning',
-                        'Completed' => 'success',
-                        'Suspended' => 'danger',
-                        'Cancelled' => 'danger',
+                    ->color(fn (?string $state): string => match (strtolower($state ?? '')) {
+                        'planned', 'proposed', 'budgeted', 'budgeted 2026' => 'gray',
+                        'ongoing', 'in progress', 'in-progress' => 'warning',
+                        'completed', 'commissioned', 'distributed' => 'success',
+                        'awarded' => 'primary',
+                        'annually', 'seasonal' => 'info',
+                        'suspended', 'cancelled' => 'danger',
+                        default => 'info',
                     }),
                 Tables\Columns\TextColumn::make('completion_percentage')
                     ->numeric()
@@ -203,20 +211,27 @@ class ConstituencyProjectResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn (?string $state): string => match (strtolower($state ?? '')) {
                         'draft' => 'gray',
                         'review' => 'warning',
                         'approved' => 'info',
                         'published' => 'success',
                         'archived' => 'danger',
+                        default => 'gray',
                     }),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status_project')
                     ->options([
-                        'Planned' => 'Planned',
-                        'Ongoing' => 'Ongoing',
+                        'Annually' => 'Annually',
+                        'Awarded' => 'Awarded',
+                        'Budgeted' => 'Budgeted',
+                        'Budgeted 2026' => 'Budgeted 2026',
                         'Completed' => 'Completed',
+                        'Distributed' => 'Distributed',
+                        'Ongoing' => 'Ongoing',
+                        'Planned' => 'Planned',
+                        'Seasonal' => 'Seasonal',
                         'Suspended' => 'Suspended',
                         'Cancelled' => 'Cancelled',
                     ]),

@@ -96,9 +96,10 @@ class AppointeeResource extends Resource
                     ->label('Order'),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn (?string $state): string => match ($state ?? '') {
                         'draft' => 'gray',
                         'published' => 'success',
+                        default => 'gray',
                     }),
             ])
             ->filters([

@@ -93,12 +93,13 @@ class NewsResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn (?string $state): string => match ($state ?? '') {
                         'draft' => 'gray',
                         'review' => 'warning',
                         'approved' => 'info',
                         'published' => 'success',
                         'archived' => 'danger',
+                        default => 'gray',
                     }),
             ])
             ->filters([

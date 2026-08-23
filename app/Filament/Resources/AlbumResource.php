@@ -84,12 +84,13 @@ class AlbumResource extends Resource
                     ->limit(50),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn (?string $state): string => match ($state ?? '') {
                         'draft' => 'gray',
                         'review' => 'warning',
                         'approved' => 'info',
                         'published' => 'success',
                         'archived' => 'danger',
+                        default => 'gray',
                     }),
             ])
             ->filters([
