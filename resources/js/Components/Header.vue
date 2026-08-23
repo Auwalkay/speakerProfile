@@ -47,9 +47,11 @@ const closeMobileMenu = () => {
                     </svg>
                 </div>
                 <div class="block">
-                    <span class="block text-[7.5px] sm:text-[8px] font-black tracking-widest text-[#008751] uppercase leading-tight">OFFICE OF THE SPEAKER</span>
+                    <span class="block text-[7.5px] sm:text-[8px] font-black tracking-widest text-[#008751] uppercase leading-tight">SPEAKER OF THE 10th Assembly</span>
                     <span class="block text-[10px] sm:text-[11px] font-extrabold text-[#172033] leading-none uppercase">House of Representatives</span>
                     <span class="block text-[7.5px] sm:text-[8px] font-medium text-[#64748B] leading-none mt-0.5">Federal Republic of Nigeria</span>
+                    <span class="block text-[7.5px] sm:text-[8px] font-medium text-[#64748B] leading-none mt-0.5">Rt. Hon. Abbas Tajudeen, Ph.D., GCON</span>
+
                 </div>
             </Link>
 
