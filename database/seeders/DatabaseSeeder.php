@@ -17,17 +17,8 @@ class DatabaseSeeder extends Seeder
             RoleAndPermissionSeeder::class,
             StateAndLgaSeeder::class,
             DemoDataSeeder::class,
+            SiteSettingSeeder::class,
         ]);
-
-        // Seed default settings
-        \App\Models\SiteSetting::firstOrCreate(
-            ['key' => 'speaker_image'],
-            ['type' => 'image', 'value' => '/images/speaker_portrait.png']
-        );
-        \App\Models\SiteSetting::firstOrCreate(
-            ['key' => 'speaker_welcome_speech'],
-            ['type' => 'text', 'value' => 'Dedicated to transparent governance, impactful legislation, and empowering citizens across the nation through visionary leadership.']
-        );
 
         // Seed default hero slides
         \App\Models\HeroSlide::firstOrCreate(

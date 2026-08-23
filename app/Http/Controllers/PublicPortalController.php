@@ -17,6 +17,7 @@ use App\Models\Lga;
 use App\Models\AchievementCategory;
 use App\Models\ProjectCategory;
 use App\Models\NewsCategory;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -45,7 +46,32 @@ class PublicPortalController extends Controller
 
     public function about(): Response
     {
-        return Inertia::render('About');
+        $settings = SiteSetting::whereIn('type', ['text', 'image'])
+            ->pluck('value', 'key');
+
+        $speakerImageSetting = SiteSetting::where('key', 'speaker_image')->first();
+        $speakerImageUrl = ($speakerImageSetting && $speakerImageSetting->hasMedia('speaker_image'))
+            ? $speakerImageSetting->getFirstMediaUrl('speaker_image')
+            : ($settings->get('speaker_image') ?: '/images/speaker_portrait.png');
+
+        return Inertia::render('About', [
+            'about' => [
+                'title' => $settings->get('about_title', 'Office of the Speaker of the House of Representatives'),
+                'subtitle' => $settings->get('about_subtitle', 'The constitutional mandate, leadership profile, and structure of the House of Representatives.'),
+                'constitutional_role' => $settings->get('about_constitutional_role', 'Under Section 50 of the Constitution of the Federal Republic of Nigeria, the Speaker of the House of Representatives acts as the presiding officer of the House. The Speaker coordinates the legislative activity of the lower chamber of the National Assembly, represents the house in external communications, and acts on behalf of the constituency represented.'),
+                'legislative_agenda' => $settings->get('about_legislative_agenda', 'The office focuses on steering the legislative agenda towards socio-economic development, robust security oversight, educational empowerment, infrastructural progress, and transparency in public resource utilization.'),
+                'coat_of_arms_title' => $settings->get('about_coat_of_arms_title', 'Federal Republic of Nigeria'),
+                'coat_of_arms_text' => $settings->get('about_coat_of_arms_text', 'Our institution acts as the voice of the Nigerian populace across 360 federal constituencies. All programs and projects published on this portal represent the verified stewardship of the Office.'),
+            ],
+            'speaker' => [
+                'name' => $settings->get('speaker_name', 'Rt. Hon. Tajudeen Abbas, Ph.D'),
+                'title' => $settings->get('speaker_title', 'Speaker, 10th House of Representatives, Federal Republic of Nigeria'),
+                'biography' => $settings->get('speaker_biography', 'Rt. Hon. Tajudeen Abbas, Ph.D, is a distinguished academician, public administrator, and senior legislator. Serving as the Speaker of the 10th House of Representatives, he has sponsored numerous legislative bills and spearheaded reforms aimed at economic revitalisation, national security oversight, and transparent public resource governance.'),
+                'constituency' => $settings->get('speaker_constituency', 'Zaria Federal Constituency, Kaduna State'),
+                'education' => $settings->get('speaker_education', 'Ph.D in Business Management (UDUS), M.Sc & B.Sc in Business Administration (ABU Zaria)'),
+                'image_url' => $speakerImageUrl,
+            ],
+        ]);
     }
 
     public function achievements(Request $request): Response
