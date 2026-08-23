@@ -110,6 +110,7 @@ class PublicationResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('publish')
                     ->action(fn (Publication $record) => $record->update(['status' => 'published', 'published_at' => now()]))
                     ->visible(fn (Publication $record) => $record->status !== 'published')

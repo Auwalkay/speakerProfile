@@ -111,6 +111,7 @@ class MotionResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('publish')
                     ->action(fn (Motion $record) => $record->update(['status' => 'published', 'published_at' => now()]))
                     ->visible(fn (Motion $record) => $record->status !== 'published')

@@ -27,6 +27,7 @@ interface Achievement {
     content: string | null;
     category?: { name: string };
     published_at: string | null;
+    image_url?: string | null;
 }
 
 interface PaginatedAchievements {
@@ -99,9 +100,12 @@ watch([search, category, state, year], () => {
                 <div 
                     v-for="feat in featured" 
                     :key="feat.id" 
-                    class="bg-[#172033] text-white rounded-xl border border-slate-800 p-6 flex flex-col justify-between hover:border-[#D4AF37]/50 transition duration-150 shadow-md"
+                    class="bg-[#172033] text-white rounded-xl border border-slate-800 overflow-hidden flex flex-col justify-between hover:border-[#D4AF37]/50 transition duration-150 shadow-md group"
                 >
-                    <div class="space-y-3">
+                    <div v-if="feat.image_url" class="aspect-video w-full overflow-hidden bg-slate-900">
+                        <img :src="feat.image_url" :alt="feat.title" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                    </div>
+                    <div class="p-6 space-y-3">
                         <span class="inline-block bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/30 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider">
                             {{ feat.category?.name || 'Featured' }}
                         </span>
@@ -114,7 +118,7 @@ watch([search, category, state, year], () => {
                             {{ feat.summary }}
                         </p>
                     </div>
-                    <div class="pt-4 border-t border-slate-800 flex justify-between items-center text-[9px] text-slate-400 font-semibold">
+                    <div class="p-6 pt-0 border-t border-slate-800/80 flex justify-between items-center text-[9px] text-slate-400 font-semibold">
                         <span>{{ feat.published_at ? new Date(feat.published_at).toLocaleDateString() : '' }}</span>
                         <Link :href="`/achievements/${feat.slug}`" class="text-[#D4AF37] font-bold hover:underline">Read Detail &rarr;</Link>
                     </div>
@@ -136,18 +140,23 @@ watch([search, category, state, year], () => {
                 <div
                     v-for="ach in achievements.data"
                     :key="ach.id"
-                    class="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden flex flex-col justify-between hover:border-[#008751]/30 transition duration-150"
+                    class="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden flex flex-col justify-between hover:border-[#008751]/30 transition duration-150 group"
                 >
-                    <div class="p-6 space-y-3">
-                        <span class="inline-block bg-[#008751]/10 text-[#008751] px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">
-                            {{ ach.category?.name || 'Achievement' }}
-                        </span>
-                        <h3 class="text-base font-bold text-[#172033] hover:text-[#008751] transition">
-                            <Link :href="`/achievements/${ach.slug}`">{{ ach.title }}</Link>
-                        </h3>
-                        <p class="text-xs text-[#64748B] leading-relaxed line-clamp-3">
-                            {{ ach.summary || 'No summary available.' }}
-                        </p>
+                    <div>
+                        <div v-if="ach.image_url" class="aspect-video w-full overflow-hidden bg-slate-100">
+                            <img :src="ach.image_url" :alt="ach.title" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                        </div>
+                        <div class="p-6 space-y-3">
+                            <span class="inline-block bg-[#008751]/10 text-[#008751] px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">
+                                {{ ach.category?.name || 'Achievement' }}
+                            </span>
+                            <h3 class="text-base font-bold text-[#172033] hover:text-[#008751] transition">
+                                <Link :href="`/achievements/${ach.slug}`">{{ ach.title }}</Link>
+                            </h3>
+                            <p class="text-xs text-[#64748B] leading-relaxed line-clamp-3">
+                                {{ ach.summary || 'No summary available.' }}
+                            </p>
+                        </div>
                     </div>
                     <div class="bg-slate-50 px-6 py-3 border-t border-slate-100 flex justify-between items-center text-[10px] text-[#64748B] font-medium">
                         <span>{{ ach.published_at ? new Date(ach.published_at).toLocaleDateString() : 'N/A' }}</span>

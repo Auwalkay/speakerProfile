@@ -35,6 +35,7 @@ interface Project {
     category?: Category;
     state?: State;
     lga?: Lga;
+    image_url?: string | null;
 }
 
 interface PaginatedProjects {
@@ -129,10 +130,20 @@ watch(lga, () => {
                 <div 
                     v-for="proj in projects.data" 
                     :key="proj.id" 
-                    class="bg-white rounded-xl border border-slate-100 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition"
+                    class="bg-white rounded-xl border border-slate-100 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition group"
                 >
+                    <div v-if="proj.image_url" class="bg-slate-100 aspect-video overflow-hidden relative">
+                        <img 
+                            :src="proj.image_url" 
+                            :alt="proj.name" 
+                            class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                        />
+                        <span class="absolute top-3 left-3 bg-[#008751] text-white text-[9px] font-bold px-2 py-0.5 rounded tracking-wide uppercase shadow-sm">
+                            {{ proj.category?.name || 'Development' }}
+                        </span>
+                    </div>
                     <div class="p-6 space-y-4">
-                        <div class="flex justify-between items-start">
+                        <div v-if="!proj.image_url" class="flex justify-between items-start">
                             <span class="bg-[#008751]/10 text-[#008751] px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">
                                 {{ proj.category?.name || 'Development' }}
                             </span>
@@ -151,7 +162,7 @@ watch(lga, () => {
                         </div>
 
                         <!-- Progress Bar -->
-                        <div class="space-y-1.5 pt-2">
+                        <div v-if="proj.completion_percentage != null" class="space-y-1.5 pt-2">
                             <div class="flex justify-between text-[10px] font-bold text-[#172033]">
                                 <span>Completion</span>
                                 <span>{{ proj.completion_percentage }}%</span>
@@ -164,7 +175,8 @@ watch(lga, () => {
 
                     <!-- Footer parameters -->
                     <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-between items-center text-[10px] text-slate-400 font-semibold">
-                        <span>Budget: {{ proj.budget ? `₦${Number(proj.budget).toLocaleString()}` : 'Confidential' }}</span>
+                        <span v-if="proj.budget">Budget: ₦{{ Number(proj.budget).toLocaleString() }}</span>
+                        <span v-else></span>
                         <Link :href="`/projects/${proj.slug}`" class="text-[#008751] font-bold hover:underline">View Details &rarr;</Link>
                     </div>
                 </div>

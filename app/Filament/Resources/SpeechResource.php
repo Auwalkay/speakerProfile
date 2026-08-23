@@ -112,6 +112,7 @@ class SpeechResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('publish')
                     ->action(fn (Speech $record) => $record->update(['status' => 'published', 'published_at' => now()]))
                     ->visible(fn (Speech $record) => $record->status !== 'published')

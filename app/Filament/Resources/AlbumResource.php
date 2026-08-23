@@ -104,6 +104,7 @@ class AlbumResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('publish')
                     ->action(fn (MediaAlbum $record) => $record->update(['status' => 'published', 'published_at' => now()]))
                     ->visible(fn (MediaAlbum $record) => $record->status !== 'published')

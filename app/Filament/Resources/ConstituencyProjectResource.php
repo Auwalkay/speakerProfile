@@ -35,7 +35,15 @@ class ConstituencyProjectResource extends Resource
                                     ->required()
                                     ->maxLength(255)
                                     ->live(onBlur: true)
-                                    ->afterStateUpdated(fn (string $operation, $state, Forms\Set $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null),
+                                    ->afterStateUpdated(function (string $operation, $state, Forms\Set $set) {
+                                        if ($operation === 'create') {
+                                            $set('slug', Str::slug($state));
+                                            $set('title', $state);
+                                        }
+                                    }),
+                                Forms\Components\Hidden::make('title')
+                                    ->dehydrated(fn ($state, callable $get) => filled($state) || filled($get('name')))
+                                    ->default(fn (callable $get) => $get('name')),
                                 Forms\Components\TextInput::make('slug')
                                     ->required()
                                     ->disabled()
@@ -72,34 +80,44 @@ class ConstituencyProjectResource extends Resource
                                     ->disabled(fn (callable $get) => !$get('state_id'))
                                     ->required(),
                                 Forms\Components\TextInput::make('community')
+                                    ->nullable()
                                     ->maxLength(255),
                                 Forms\Components\TextInput::make('location')
+                                    ->nullable()
                                     ->maxLength(255),
 
-                                // Budgets & Timeline
+                                // Budgets & Timeline (All Nullable / Optional)
                                 Forms\Components\TextInput::make('budget')
                                     ->numeric()
+                                    ->nullable()
                                     ->prefix('₦'),
                                 Forms\Components\TextInput::make('funding_source')
+                                    ->nullable()
                                     ->maxLength(255),
-                                Forms\Components\DatePicker::make('start_date'),
-                                Forms\Components\DatePicker::make('expected_completion'),
+                                Forms\Components\DatePicker::make('start_date')
+                                    ->nullable(),
+                                Forms\Components\DatePicker::make('expected_completion')
+                                    ->label('Expected Completion / End Date')
+                                    ->nullable(),
                                 Forms\Components\TextInput::make('completion_percentage')
                                     ->numeric()
+                                    ->nullable()
                                     ->default(0)
                                     ->minValue(0)
                                     ->maxValue(100)
                                     ->suffix('%'),
                                 Forms\Components\TextInput::make('beneficiaries_count')
+                                    ->label('Beneficiaries')
                                     ->numeric()
+                                    ->nullable()
                                     ->default(0),
 
                                 Forms\Components\Textarea::make('summary')
-                                    ->required()
+                                    ->nullable()
                                     ->maxLength(500)
                                     ->columnSpanFull(),
                                 Forms\Components\RichEditor::make('description')
-                                    ->required()
+                                    ->nullable()
                                     ->columnSpanFull(),
 
                                 Forms\Components\Select::make('status')
@@ -211,6 +229,7 @@ class ConstituencyProjectResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('publish')
                     ->action(fn (ConstituencyProject $record) => $record->update(['status' => 'published', 'published_at' => now()]))
                     ->visible(fn (ConstituencyProject $record) => $record->status !== 'published')

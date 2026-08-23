@@ -80,6 +80,7 @@ class EventResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('publish')
                     ->action(fn (Event $record) => $record->update(['status' => 'published', 'published_at' => now()]))
                     ->visible(fn (Event $record) => $record->status !== 'published')

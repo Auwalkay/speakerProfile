@@ -43,15 +43,15 @@ class RoleAndPermissionSeeder extends Seeder
 
         $publisher = Role::findOrCreate('Publisher');
         $publisher->givePermissionTo([
-            'create achievements', 'edit achievements', 'publish achievements',
-            'create bills', 'edit bills', 'publish bills',
-            'create motions', 'edit motions', 'publish motions',
-            'create projects', 'edit projects', 'publish projects',
-            'create news', 'edit news', 'publish news',
-            'create speeches', 'edit speeches', 'publish speeches',
-            'create events', 'edit events', 'publish events',
-            'create publications', 'edit publications', 'publish publications',
-            'create media', 'edit media', 'publish media',
+            'create achievements', 'edit achievements', 'delete achievements', 'publish achievements',
+            'create bills', 'edit bills', 'delete bills', 'publish bills',
+            'create motions', 'edit motions', 'delete motions', 'publish motions',
+            'create projects', 'edit projects', 'delete projects', 'publish projects',
+            'create news', 'edit news', 'delete news', 'publish news',
+            'create speeches', 'edit speeches', 'delete speeches', 'publish speeches',
+            'create events', 'edit events', 'delete events', 'publish events',
+            'create publications', 'edit publications', 'delete publications', 'publish publications',
+            'create media', 'edit media', 'delete media', 'publish media',
             'view messages', 'reply messages',
             'manage subscribers',
         ]);

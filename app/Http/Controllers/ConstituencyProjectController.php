@@ -47,6 +47,32 @@ class ConstituencyProjectController extends Controller
 
         $projects = $query->orderBy('published_at', 'desc')
             ->paginate(12)
+            ->through(function ($project) {
+                $mediaUrl = $project->getFirstMediaUrl('after') 
+                    ?: ($project->getFirstMediaUrl('during') 
+                    ?: ($project->getFirstMediaUrl('before') 
+                    ?: ($project->getFirstMediaUrl('gallery') ?: null)));
+                
+                if (!$mediaUrl && !empty($project->featured_image)) {
+                    $mediaUrl = str_starts_with($project->featured_image, 'http') || str_starts_with($project->featured_image, '/')
+                        ? $project->featured_image
+                        : asset('storage/' . $project->featured_image);
+                }
+
+                return [
+                    'id' => $project->id,
+                    'title' => $project->title,
+                    'name' => $project->name,
+                    'slug' => $project->slug,
+                    'location' => $project->location,
+                    'status_project' => $project->status_project,
+                    'beneficiaries_count' => $project->beneficiaries_count,
+                    'category' => $project->category,
+                    'state' => $project->state,
+                    'lga' => $project->lga,
+                    'image_url' => $mediaUrl ?: null,
+                ];
+            })
             ->withQueryString();
 
         $states = State::select('id', 'name')->get();

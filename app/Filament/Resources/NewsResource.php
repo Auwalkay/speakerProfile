@@ -116,6 +116,7 @@ class NewsResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('publish')
                     ->action(fn (News $record) => $record->update(['status' => 'published', 'published_at' => now()]))
                     ->visible(fn (News $record) => $record->status !== 'published')

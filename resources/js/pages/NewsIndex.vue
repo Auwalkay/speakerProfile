@@ -22,6 +22,7 @@ interface News {
     author: string | null;
     published_at: string | null;
     category?: Category;
+    image_url?: string | null;
 }
 
 interface PaginatedNews {
@@ -75,11 +76,20 @@ watch([search, category], () => {
 
         <!-- Featured News Card (Only if no active filters are set) -->
         <div v-if="featured && !search && !category" class="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden mb-12 grid grid-cols-1 lg:grid-cols-2">
-            <div class="bg-slate-100 aspect-video lg:aspect-auto min-h-[260px] flex items-center justify-center text-slate-400 relative">
-                <span class="absolute top-4 left-4 bg-[#008751] text-white text-[9px] font-bold px-2 py-0.5 rounded tracking-wide uppercase">
+            <div class="bg-slate-100 aspect-video lg:aspect-auto min-h-[260px] flex items-center justify-center text-slate-400 relative overflow-hidden group">
+                <img 
+                    v-if="featured.image_url" 
+                    :src="featured.image_url" 
+                    :alt="featured.title" 
+                    class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                />
+                <div v-else class="w-full h-full flex flex-col items-center justify-center text-slate-300 font-bold uppercase text-xs space-y-1 p-6">
+                    <svg class="w-10 h-10 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    <span>Official Release</span>
+                </div>
+                <span class="absolute top-4 left-4 bg-[#008751] text-white text-[9px] font-bold px-2 py-0.5 rounded tracking-wide uppercase shadow-sm">
                     Featured
                 </span>
-                <span class="text-xs font-bold uppercase tracking-wider">Official Photo Release</span>
             </div>
             <div class="p-8 sm:p-10 flex flex-col justify-between space-y-6">
                 <div class="space-y-4">
@@ -112,14 +122,23 @@ watch([search, category], () => {
                 <div 
                     v-for="item in news.data" 
                     :key="item.id" 
-                    class="bg-white rounded-xl border border-slate-100 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition"
+                    class="bg-white rounded-xl border border-slate-100 overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition group"
                 >
                     <div>
-                        <div class="bg-slate-100 aspect-video flex items-center justify-center text-slate-400 relative">
-                            <span class="absolute top-3 left-3 bg-[#172033] text-white text-[9px] font-bold px-2 py-0.5 rounded tracking-wide uppercase">
+                        <div class="bg-slate-100 aspect-video flex items-center justify-center text-slate-400 relative overflow-hidden">
+                            <img 
+                                v-if="item.image_url" 
+                                :src="item.image_url" 
+                                :alt="item.title" 
+                                class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                            />
+                            <div v-else class="w-full h-full flex flex-col items-center justify-center text-slate-300 font-bold uppercase text-[10px] space-y-1">
+                                <svg class="w-8 h-8 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                <span>Official Release</span>
+                            </div>
+                            <span class="absolute top-3 left-3 bg-[#172033] text-white text-[9px] font-bold px-2 py-0.5 rounded tracking-wide uppercase shadow-sm">
                                 {{ item.category?.name || 'UPDATE' }}
                             </span>
-                            <span class="text-[9px] font-bold tracking-wider uppercase">Photo</span>
                         </div>
                         <div class="p-6 space-y-3">
                             <span class="block text-[10px] font-semibold text-slate-400">

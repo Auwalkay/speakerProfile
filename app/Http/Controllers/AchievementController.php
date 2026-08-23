@@ -42,6 +42,25 @@ class AchievementController extends Controller
         // Paginated result
         $achievements = $query->orderBy('published_at', 'desc')
             ->paginate(12)
+            ->through(function ($achievement) {
+                $mediaUrl = $achievement->getFirstMediaUrl('featured_image');
+                if (!$mediaUrl && !empty($achievement->featured_image)) {
+                    $mediaUrl = str_starts_with($achievement->featured_image, 'http') || str_starts_with($achievement->featured_image, '/')
+                        ? $achievement->featured_image
+                        : asset('storage/' . $achievement->featured_image);
+                }
+                return [
+                    'id' => $achievement->id,
+                    'title' => $achievement->title,
+                    'slug' => $achievement->slug,
+                    'summary' => $achievement->summary,
+                    'achievement_date' => $achievement->achievement_date ? $achievement->achievement_date->format('M d, Y') : null,
+                    'category' => $achievement->category,
+                    'state' => $achievement->state,
+                    'lga' => $achievement->lga,
+                    'image_url' => $mediaUrl ?: null,
+                ];
+            })
             ->withQueryString();
 
         // Featured achievements
@@ -50,7 +69,24 @@ class AchievementController extends Controller
             ->where('featured', true)
             ->orderBy('published_at', 'desc')
             ->take(3)
-            ->get();
+            ->get()
+            ->map(function ($achievement) {
+                $mediaUrl = $achievement->getFirstMediaUrl('featured_image');
+                if (!$mediaUrl && !empty($achievement->featured_image)) {
+                    $mediaUrl = str_starts_with($achievement->featured_image, 'http') || str_starts_with($achievement->featured_image, '/')
+                        ? $achievement->featured_image
+                        : asset('storage/' . $achievement->featured_image);
+                }
+                return [
+                    'id' => $achievement->id,
+                    'title' => $achievement->title,
+                    'slug' => $achievement->slug,
+                    'summary' => $achievement->summary,
+                    'achievement_date' => $achievement->achievement_date ? $achievement->achievement_date->format('M d, Y') : null,
+                    'category' => $achievement->category,
+                    'image_url' => $mediaUrl ?: null,
+                ];
+            });
 
         $categories = AchievementCategory::select('id', 'name')->get();
         $states = State::select('id', 'name')->get();
