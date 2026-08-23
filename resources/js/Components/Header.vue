@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import { usePage, Link } from '@inertiajs/vue3';
 
 const page = usePage();
 const currentPath = computed(() => page.url);
+const isMobileMenuOpen = ref(false);
+const isMediaMobileOpen = ref(false);
 
 const mainNavigation = [
     { name: 'Home', href: '/' },
@@ -19,13 +21,17 @@ const mediaDropdown = [
     { name: 'Publications', href: '/publications' },
     { name: 'Media Gallery', href: '/media' },
 ];
+
+const closeMobileMenu = () => {
+    isMobileMenuOpen.value = false;
+};
 </script>
 
 <template>
     <header class="bg-white border-b border-[#E2E8F0] sticky top-0 z-50 py-3" role="banner">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between items-center h-14">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-14">
             <!-- Branding Text & Logo -->
-            <Link href="/" class="flex items-center space-x-3 text-left focus:outline-none" aria-label="Home page">
+            <Link href="/" class="flex items-center space-x-2.5 text-left focus:outline-none" aria-label="Home page">
                 <div class="w-10 h-10 flex-shrink-0">
                     <svg viewBox="0 0 100 100" class="w-full h-full text-[#008751]" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="50" cy="50" r="48" stroke="#D4AF37" stroke-width="1.5" />
@@ -40,14 +46,14 @@ const mediaDropdown = [
                         <path d="M32 58C40 60 60 60 68 58C62 61 38 61 32 58Z" fill="#008751" stroke="#008751" stroke-width="2" />
                     </svg>
                 </div>
-                <div class="hidden sm:block">
-                    <span class="block text-[8px] font-black tracking-widest text-[#008751] uppercase leading-tight">OFFICE OF THE SPEAKER</span>
-                    <span class="block text-[11px] font-extrabold text-[#172033] leading-none uppercase">House of Representatives</span>
-                    <span class="block text-[8px] font-medium text-[#64748B] leading-none mt-0.5">Federal Republic of Nigeria</span>
+                <div class="block">
+                    <span class="block text-[7.5px] sm:text-[8px] font-black tracking-widest text-[#008751] uppercase leading-tight">OFFICE OF THE SPEAKER</span>
+                    <span class="block text-[10px] sm:text-[11px] font-extrabold text-[#172033] leading-none uppercase">House of Representatives</span>
+                    <span class="block text-[7.5px] sm:text-[8px] font-medium text-[#64748B] leading-none mt-0.5">Federal Republic of Nigeria</span>
                 </div>
             </Link>
 
-            <!-- Navigation Links -->
+            <!-- Desktop Navigation Links -->
             <nav class="hidden lg:flex space-x-6 items-center" aria-label="Main Navigation">
                 <Link
                     v-for="item in mainNavigation"
@@ -108,7 +114,85 @@ const mediaDropdown = [
                 </Link>
             </nav>
 
+            <!-- Mobile Hamburger Toggle Button -->
+            <button
+                @click="isMobileMenuOpen = !isMobileMenuOpen"
+                type="button"
+                class="lg:hidden p-2 rounded-lg text-[#172033] hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#008751]"
+                aria-label="Toggle Navigation Menu"
+                :aria-expanded="isMobileMenuOpen"
+            >
+                <svg v-if="!isMobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg v-else class="w-6 h-6 text-[#008751]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
 
+        <!-- Mobile Navigation Menu Overlay / Slide Drawer -->
+        <div 
+            v-show="isMobileMenuOpen" 
+            class="lg:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-2 shadow-xl animate-[fadeIn_0.2s_ease-out]"
+        >
+            <div class="space-y-1 border-b border-slate-100 pb-3">
+                <Link
+                    v-for="item in mainNavigation"
+                    :key="item.name"
+                    :href="item.href"
+                    @click="closeMobileMenu"
+                    :class="[
+                        currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href))
+                            ? 'bg-[#008751]/10 text-[#008751] font-bold'
+                            : 'text-[#475569] hover:bg-slate-50 hover:text-[#008751]',
+                        'block px-3 py-2.5 rounded-lg text-sm transition'
+                    ]"
+                >
+                    {{ item.name }}
+                </Link>
+            </div>
+
+            <!-- Mobile Media Center Submenu -->
+            <div class="py-1 border-b border-slate-100">
+                <button 
+                    @click="isMediaMobileOpen = !isMediaMobileOpen"
+                    class="w-full flex justify-between items-center px-3 py-2.5 rounded-lg text-sm font-bold text-[#475569] hover:bg-slate-50 hover:text-[#008751]"
+                >
+                    <span>Media Center</span>
+                    <svg class="w-4 h-4 transform transition-transform duration-150" :class="{ 'rotate-180': isMediaMobileOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div v-show="isMediaMobileOpen" class="pl-4 space-y-1 pt-1 pb-2">
+                    <Link
+                        v-for="sub in mediaDropdown"
+                        :key="sub.name"
+                        :href="sub.href"
+                        @click="closeMobileMenu"
+                        :class="[
+                            currentPath.startsWith(sub.href) ? 'text-[#008751] font-bold' : 'text-[#64748B] hover:text-[#008751]',
+                            'block px-3 py-2 rounded-md text-xs font-semibold'
+                        ]"
+                    >
+                        {{ sub.name }}
+                    </Link>
+                </div>
+            </div>
+
+            <!-- Mobile Contact Link -->
+            <div class="pt-1">
+                <Link
+                    href="/contact"
+                    @click="closeMobileMenu"
+                    :class="[
+                        currentPath === '/contact' ? 'bg-[#008751]/10 text-[#008751] font-bold' : 'text-[#475569] hover:bg-slate-50',
+                        'block px-3 py-2.5 rounded-lg text-sm transition'
+                    ]"
+                >
+                    Contact & Feedback
+                </Link>
+            </div>
         </div>
     </header>
 </template>

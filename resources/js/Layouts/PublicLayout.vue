@@ -17,12 +17,13 @@ const currentPath = computed(() => page.url);
 
     <div class="min-h-screen flex flex-col bg-[#F8FAFC] text-[#172033] font-sans antialiased selection:bg-[#008751] selection:text-white">
         <!-- Top Institutional Bar -->
-        <div class="bg-[#172033] text-white py-2 px-4 sm:px-6 lg:px-8 border-b-2 border-[#D4AF37] text-[11px] font-semibold tracking-wider flex justify-between items-center">
-            <div class="hidden md:flex space-x-4">
-                <a href="https://nass.gov.ng" target="_blank" class="hover:text-[#D4AF37] transition duration-150">National Assembly</a>
-                <span class="text-gray-500">|</span>
-                <a href="https://statehouse.gov.ng" target="_blank" class="hover:text-[#D4AF37] transition duration-150">State House</a>
+        <div class="bg-[#172033] text-white py-1.5 px-4 sm:px-6 lg:px-8 border-b-2 border-[#D4AF37] text-[10px] sm:text-[11px] font-semibold tracking-wider flex justify-between items-center">
+            <div class="flex items-center space-x-3 sm:space-x-4">
+                <a href="https://nass.gov.ng" target="_blank" rel="noopener noreferrer" class="hover:text-[#D4AF37] transition duration-150">National Assembly</a>
+                <span class="text-slate-500">|</span>
+                <a href="https://statehouse.gov.ng" target="_blank" rel="noopener noreferrer" class="hover:text-[#D4AF37] transition duration-150">State House</a>
             </div>
+            <span class="hidden sm:inline text-slate-400 text-[10px]">Federal Republic of Nigeria</span>
         </div>
 
         <!-- Modular Header -->

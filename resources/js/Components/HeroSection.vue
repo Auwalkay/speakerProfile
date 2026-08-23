@@ -92,7 +92,7 @@ onUnmounted(() => {
 
         <div class="max-w-7xl mx-auto px-6 lg:px-8 py-16 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center relative z-10 w-full">
             <!-- Left Info Area (7 cols) -->
-            <div class="lg:col-span-7 text-left space-y-8 min-h-[360px] flex flex-col justify-center">
+            <div class="lg:col-span-7 text-left space-y-6 sm:space-y-8 min-h-[300px] sm:min-h-[360px] flex flex-col justify-center">
                 
                 <!-- Slide-specific text content transitions -->
                 <div v-if="slides && slides.length > 0">
@@ -100,20 +100,19 @@ onUnmounted(() => {
                         v-for="(slide, index) in slides" 
                         :key="'text-' + slide.id" 
                         v-show="activeSlide === index" 
-                        class="space-y-6 animate-[fadeIn_0.5s_ease-out]"
+                        class="space-y-4 sm:space-y-6 animate-[fadeIn_0.5s_ease-out]"
                     >
                         <!-- Badge -->
                         <div v-if="slide.badge" class="inline-flex items-center space-x-2 bg-white/5 border border-white/10 px-3 py-1 rounded-full">
-                            <!-- <span class="w-1.5 h-1.5 rounded-full bg-[#008751]"></span> -->
-                            <span class="text-[10px] font-black tracking-widest text-[#D4AF37] uppercase">{{ slide.badge }}</span>
+                            <span class="text-[9px] sm:text-[10px] font-black tracking-widest text-[#D4AF37] uppercase">{{ slide.badge }}</span>
                         </div>
 
-                        <div class="space-y-4">
-                            <span class="block text-xs font-black tracking-wider text-[#008751] uppercase">Federal Republic of Nigeria</span>
-                            <h2 id="hero-title" class="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight uppercase">
+                        <div class="space-y-3 sm:space-y-4">
+                            <span class="block text-[10px] sm:text-xs font-black tracking-wider text-[#008751] uppercase">Federal Republic of Nigeria</span>
+                            <h2 id="hero-title" class="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-white leading-[1.1] tracking-tight uppercase break-words">
                                 {{ slide.title }}
                             </h2>
-                            <p v-if="slide.subtitle" class="text-sm sm:text-base text-slate-300 leading-relaxed font-semibold max-w-xl">
+                            <p v-if="slide.subtitle" class="text-xs sm:text-sm lg:text-base text-slate-300 leading-relaxed font-semibold max-w-xl">
                                 {{ slide.subtitle }}
                             </p>
                         </div>
